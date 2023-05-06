@@ -1,7 +1,3 @@
-cinema_ebooking_system.db
-env/
-.venv/
 .vs/
-database_show_tables.py
 __pycache__/
 flask_session/
