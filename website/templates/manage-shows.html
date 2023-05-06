@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Cinema E-Booking{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-7 mx-auto">
+            <div class="card border-0 shadow">
+                <div class="card-body p-5">
+
+                    <!-- Responsive table -->
+                    <div class="table-responsive">
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Movie</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Time</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for show in shows %}
+                                    <tr>
+                                        <th scope="row">{{show.id}}</th>
+                                        <td>{{show.movie.title}}</td>
+                                        <td>{{show.show_date}}</td>
+                                        <td>{{show.show_time}} PM</td>
+                                        <td>
+                                            <!-- Call to action buttons -->
+                                            <ul class="list-inline m-0">
+                                                <li class="list-inline-item">
+                                                    <form action="/edit-show/{{show.id}}" method="get">
+                                                        <button class="btn btn-success btn-sm rounded-0" type="submit" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i>Edit</button>
+                                                    </form>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <form action="/delete-show" method="post">
+                                                        <button class="btn btn-danger btn-sm rounded-0" type="submit" data-toggle="tooltip" data-placement="top" title="Delete" name="delete" value="{{show.id}}"><i class="fa fa-trash"></i>Delete</button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <form action="/add-show" method="get">
+                            <button class="btn btn-primary" type="submit" data-toggle="tooltip" data-placement="top" title="Add" name="add"><i class="fa fa-trash"></i>Add Show</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

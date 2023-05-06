@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% block title %}Cinema E-Booking{% endblock %}
+{% block content %}
+<style>
+    body {
+        position: relative;
+        margin: 0px;
+        height: 100%;
+        width: 100%;
+        background: #e9e9e9;
+        font-family: 'Arimo', Arial, sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #010b26;
+    }
+
+    * {
+        -webkit-transition: 300ms;
+        transition: 300ms;
+    }
+
+    .movie-info {
+        background-color: black;
+        color: whitesmoke;
+        width: 100%;
+    }
+
+    .ticket-selection-container {
+        position: absolute;
+        background: white;
+        border-radius: 10px;
+        padding: 5vw 0;
+        width: 50%;
+        top: 11vw;
+        left: 25vw;
+        display: grid;
+        justify-content: center;
+        grid-row-gap: 1vw;
+    }
+
+    .ticket-selection-container div[class*="ticket-selection"] {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-column-gap: 2vw;
+    }
+
+    .continue-container {
+        position: fixed;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        bottom: 0;
+        background-color: black;
+        color: azure;
+        width: 100%;
+        height: auto;
+        padding: 1vw;
+        margin-bottom: 2vh;
+    }
+
+    .continue-container * {
+        padding: 0 1vw;
+    }
+
+    .ticket-button {
+        width: 5vw;
+        height: auto;
+    }
+
+    .ticket-price-info * {
+        text-align: center;
+    }
+
+    @media screen and (max-width: 500px) {}
+</style>
+<div class="movie-info">
+    <h1 class="movie-title">{{show.movie.title}}</h1>
+    <p class="movie-time">{{show.show_date}} - {{show.show_time}} PM | {{show.movie.category}}</p>
+</div>
+
+<div class="ticket-selection-container">
+    <div class="adult-ticket-selection">
+        <div class="minus-ticket-button">
+            <input class="ticket-button" type="image" src="{{url_for('static', filename='Images/minus_icon.png')}}"
+                onclick="subTicket('numOfAdultTickets')">
+        </div>
+        <div class="ticket-price-info">
+            <h2 class="ticket-number" id="numOfAdultTickets">0</h2>
+            <h2>Adult</h2>
+            <div>$11.99</div>
+        </div>
+        <div class="add-ticket-button">
+            <input class="ticket-button" type="image" src="{{url_for('static', filename='Images/plus_icon.png')}}"
+                onclick="addTicket('numOfAdultTickets')">
+        </div>
+    </div>
+    <div class="child-ticket-selection">
+        <div class="minus-ticket-button">
+            <input class="ticket-button" type="image" src="{{url_for('static', filename='Images/minus_icon.png')}}"
+                onclick="subTicket('numOfChildTickets')">
+        </div>
+        <div class="ticket-price-info">
+            <h2 class="ticket-number" id="numOfChildTickets">0</h2>
+            <h2>Child</h2>
+            <div>$9.69</div>
+        </div>
+        <div class="add-ticket-button">
+            <input class="ticket-button" type="image" src="{{url_for('static', filename='Images/plus_icon.png')}}"
+                onclick="addTicket('numOfChildTickets')">
+        </div>
+    </div>
+    <div class="senior-ticket-selection">
+        <div class="minus-ticket-button">
+            <input class="ticket-button" type="image" src="{{url_for('static', filename='Images/minus_icon.png')}}"
+                onclick="subTicket('numOfSeniorTickets')">
+        </div>
+        <div class="ticket-price-info">
+            <h2 class="ticket-number" id="numOfSeniorTickets">0</h2>
+            <h2>Senior</h2>
+            <div>$9.89</div>
+        </div>
+        <div class="add-ticket-button">
+            <input class="ticket-button" type="image" src="{{url_for('static', filename='Images/plus_icon.png')}}"
+                onclick="addTicket('numOfSeniorTickets')">
+        </div>
+    </div>
+</div>
+
+<div class="continue-container">
+    <p>
+    <p id="totalNumOfTickets"></p><p>/{{numOfTickets}}</p> Tickets Selected</p>
+    <h4>Total: $ <span id="priceTotal">0</span></h4>
+    <div class="continue-button-container">
+        <form method="POST" action="/buy-tickets" id="order-summary-form">
+            <input type="hidden" name="show" value="{{show.id}}">
+            {% for seat in seats %}
+            <input class="seats" type="hidden" value="{{seat}}">
+            {% endfor %}
+            <button class="btn btn-primary">Continue</button>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    const ticketPrices = { adult: 11.99, child: 9.69, senior: 9.89 };
+    var seats = document.getElementsByClassName('seats');
+    seats = Array.prototype.slice.call(seats);
+    seats = seats.map(function (seatElement) {
+        return seatElement.value;
+    });
+    var totalNumOfTickets = document.getElementById("totalNumOfTickets").innerText;
+    var priceTotal = 0;
+    const numOfTickets = new Map();
+    numOfTickets.set('numOfAdultTickets', 0);
+    numOfTickets.set('numOfChildTickets', 0);
+    numOfTickets.set('numOfSeniorTickets', 0);
+
+    console.log(`totalNumOfTickets: ${totalNumOfTickets}`);
+    console.log(`seats: ${seats}`);
+
+    document.getElementById("priceTotal").innerText = priceTotal;
+    document.getElementById("numOfAdultTickets").innerText = numOfTickets.get('numOfAdultTickets');
+    document.getElementById("numOfChildTickets").innerText = numOfTickets.get('numOfChildTickets');
+    document.getElementById("numOfSeniorTickets").innerText = numOfTickets.get('numOfSeniorTickets');
+
+    function addTicket(id) {
+        console.log(`addTicket being called...`);
+        if (totalNumOfTickets < seats.length) {
+            numOfTickets.set(id, numOfTickets.get(id) + 1);
+            document.getElementById(id).innerText = numOfTickets.get(id);
+            totalNumOfTickets++;
+            document.getElementById("totalNumOfTickets").innerText = totalNumOfTickets;
+
+            const form = document.getElementById('order-summary-form');
+            const input_element = document.createElement('input');
+            input_element.setAttribute("type", "hidden")
+            input_element.setAttribute("name", "ticket")
+
+            switch (id) {
+                case "numOfAdultTickets":
+                    priceTotal += ticketPrices['adult'];
+
+                    input_element.setAttribute("class", "adult")
+                    input_element.setAttribute("value", ticketPrices['adult'])
+
+                    break;
+                case "numOfChildTickets":
+                    priceTotal += ticketPrices['child'];
+
+                    input_element.setAttribute("class", "child")
+                    input_element.setAttribute("value", ticketPrices['child'])
+
+                    break;
+                case "numOfSeniorTickets":
+                    priceTotal += ticketPrices['senior'];
+
+                    input_element.setAttribute("class", "senior")
+                    input_element.setAttribute("value", ticketPrices['senior'])
+
+                    break;
+            }
+
+            form.appendChild(input_element);
+
+            priceTotal = Math.round(priceTotal * 100) / 100;
+            document.getElementById("priceTotal").innerText = priceTotal;
+        }
+    }
+
+    function subTicket(id) {
+        if (numOfTickets.get(id) > 0) {
+            numOfTickets.set(id, numOfTickets.get(id) - 1);
+            document.getElementById(id).innerText = numOfTickets.get(id);
+            totalNumOfTickets--;
+            document.getElementById("totalNumOfTickets").innerText = totalNumOfTickets;
+
+            switch (id) {
+                case "numOfAdultTickets":
+                    priceTotal -= ticketPrices['adult'];
+
+                    document.getElementsByClassName('adult')[0].remove()
+
+                    break;
+                case "numOfChildTickets":
+                    priceTotal -= ticketPrices['child'];
+
+                    document.getElementsByClassName('child')[0].remove()
+
+                    break;
+                case "numOfSeniorTickets":
+                    priceTotal -= ticketPrices['senior'];
+
+                    document.getElementsByClassName('senior')[0].remove()
+
+                    break;
+            }
+            priceTotal = Math.round(priceTotal * 100) / 100;
+            document.getElementById("priceTotal").innerText = priceTotal;
+        }
+    }
+</script>
+
+<script src="jquery-3.5.1.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="main.js"></script>
+{% endblock %}

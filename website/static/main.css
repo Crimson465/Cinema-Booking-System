@@ -1,0 +1,68 @@
+body {
+    padding: 0;
+    margin-bottom: 10vh;
+    clear: both;
+    background: #f2f6e9;
+}
+.navbar {
+    background:#5157cd;
+}
+.nav-link,
+.navbar-brand {
+    color: #fff;
+    cursor: pointer;
+}
+.nav-link {
+    margin-right: 1em !important;
+}
+.nav-link:hover {
+    color: #000;
+}
+
+.error {
+    color: red;
+}
+.navbar-collapse {
+    justify-content: flex-end;
+}
+.header {
+    background-image: url('images/movie_collage.png');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+.form-check {
+    padding-bottom: 40px;
+}
+
+.description {
+	left: 50%;
+	position: absolute;
+	top: 45%;
+	transform: translate(-50%, -55%);
+	text-align: center;
+}
+.description h1 {
+	color: #6ab446;
+}
+.description p {
+	color: rgb(35, 13, 104);
+	font-size: 1.3rem;
+	line-height: 1.5;
+}
+
+.footer {
+    clear:both;
+    border: 1px groove #aaaaaa;
+    background: #5157cd;
+    color: #fff;
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+    line-height: normal;
+    margin-top: 10vh;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+

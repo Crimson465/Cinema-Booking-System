@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Cinema E-Booking{% endblock %}
+{% block content %}
+<style>
+    .container {
+        margin-top: 10vh;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-evenly;
+    }
+
+    .item {
+        display: block;
+        background-color: white;
+        color: black;
+        border: 2px solid #5157cd;
+        margin: 0px;
+        border-radius: 16px;
+        width: 300px;
+        padding: 10px 20px 20px 20px;
+        text-align: center;
+    }
+
+    .purchases-container {
+        overflow-y: scroll;
+    }
+
+    .booking-container {
+        border: 2px solid black;
+        border-radius: 16px;
+        margin-bottom: 1vh;
+    }
+
+    .card-container {
+        border: 2px solid black;
+        border-radius: 16px;
+        margin-bottom: 1vh;
+    }
+</style>
+<h1 style="text-align:center;margin-top:20px;">Profile</h1>
+<div class="container">
+    <div class="item">
+        <img src="{{ url_for('static', filename='Images/download.jpg') }}" alt="Profile pic"
+            style="border-radius:50%; margin:20px;">
+        <p>Name:</p>
+        <p>{{firstname}} {{lastname}}</p>
+        <p>Email:</p>
+        <p>{{email}}</p>
+        {% for card in payment_cards %}
+        <div class="card-container">
+            <p><strong>Card #{{card.id}}</strong></p>
+            <p>**** **** **** {{card.card_number[12:]}}</p>
+            <span class="button-container">
+                <a href="delete-card/{{card.id}}"><button
+                        class="btn btn-danger btn-sm rounded-0">Delete</button></a>
+            </span>
+            <p> </p>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="item" id="edit-profile">
+        <h1>Edit Profile</h1>
+        <form action="" method="post">
+            <div class="edit-profile-form">
+                <div>
+                    <label for="fname">First Name:</label>
+                    <input type="text" id="fname" name="fname" value="{{request.form.firstname}}"><br><br>
+                </div>
+                <div>
+                    <label for="lname">Last Name:</label>
+                    <input type="text" id="lname" name="lname" value="{{request.form.lastname}}"><br><br>
+                </div>
+                <div>
+                    <label for="Address">Address</label>
+                    <input type="text" id="Address" name="Address" value="{{request.form.address}}"><br><br>
+                </div>
+                <div>
+                    <label for="lname">Card #:</label>
+                    <input type="text" id="Card" name="Card" value="{{request.form.card}}"><br><br>
+                </div>
+                <div>
+                    <label for="lname">Expiration Date:</label>
+                    <input type="text" id="Card" name="CardE" value="{{request.form.expiration}}"><br><br>
+                </div>
+                <div>
+                    <label for="lname">Promotions:</label>
+                    {% if promo_opt == 1 %}
+                    <input type="checkbox" id="promo" name="promo" value="1" checked><br><br>
+                    {% else %}
+                    <input type="checkbox" id="promo" name="promo" value="0"><br><br>
+                    {% endif %}
+                </div>
+                <div>
+                    <input type="submit" value="Submit"></input>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="item" class="recent-purchases">
+        <h1>Recent Purchases</h1>
+        <div id="purchases-container">
+            {% for booking in bookings %}
+            <div class="booking-container">
+                <p>Booking # {{booking.id}}</p>
+                <p>Total: $ {{booking.price_total}}</p>
+                <span class="button-container">
+                    <a href="change-order/{{booking.id}}"><button
+                            class="btn btn-success btn-sm rounded-0">Change</button></a>
+                    <a href="cancel-order/{{booking.id}}"><button
+                            class="btn btn-danger btn-sm rounded-0">Cancel</button></a>
+                </span>
+                <p> </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

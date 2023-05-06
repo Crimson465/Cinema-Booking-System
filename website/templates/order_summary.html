@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}Cinema E-Booking{% endblock %}
+{% block content %}
+<style>
+    body {
+        position: relative;
+        margin: 0px;
+        height: 100%;
+        width: 100%;
+        background: #e9e9e9;
+        font-family: 'Arimo', Arial, sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #010b26;
+    }
+
+    * {
+        -webkit-transition: 300ms;
+        transition: 300ms;
+    }
+
+    .order-summary-container {
+        position: relative;
+        background: white;
+        border-radius: 10px;
+        width: 25%;
+        top: 3vw;
+        left: 37vw;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-row-gap: 1vw;
+        text-align: center;
+        margin-top: 2vh;
+        margin-left: 1vw;
+    }
+
+    .ticket-info {
+        padding-top: 2vh;
+    }
+
+    .ticket-info-item h6 {
+        font-weight: bold;
+    }
+
+    .movie-info {
+        position: relative;
+        top: 0;
+        left: 0;
+        background-color: black;
+        color: white;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding-top: 1vw;
+    }
+
+    .order-total {
+        padding: 5vh 0;
+    }
+
+    .apply-promo-container {
+        padding-bottom: 2vh;
+    }
+
+    .update-tickets-button-container {
+        padding-bottom: 2vh;
+    }
+
+    .continue-container {
+        position: fixed;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        bottom: 0;
+        background-color: black;
+        color: azure;
+        width: 100%;
+        height: auto;
+        padding: 1vw;
+        margin-bottom: 2vh;
+    }
+
+    .continue-container * {
+        padding: 0 1vw;
+    }
+
+    .ticket-button {
+        width: 5vw;
+        height: auto;
+    }
+
+    @media screen and (max-width: 500px) {}
+</style>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, msg in messages %}
+<div class="alert alert-{{ category }}">{{msg}}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+{% for ticket in tickets %}
+<input class="tickets" type="hidden" value="{{ticket}}">
+{% endfor %}
+<div class="order-summary-container">
+    <div class="movie-info">
+        <h1 class="movie-title">{{show.movie.title}}</h1>
+        <p class="movie-time">{{show.show_date}} - {{show.show_time}}PM | {{show.movie.category}}</p>
+    </div>
+    <div class="order-summary-info">
+        <div class="ticket-info">
+            {% if adultTicketTotal > 0 %}
+            <div class="ticket-info-item">
+                <h6>{{adultTicketTotal}} Adult</h6>
+            </div>
+            {% endif %}
+            {% if childTicketTotal > 0 %}
+            <div class="ticket-info-item">
+                <h6>{{childTicketTotal}} Child</h6>
+            </div>
+            {% endif %}
+            {% if seniorTicketTotal > 0 %}
+            <div class="ticket-info-item">
+                <h6>{{seniorTicketTotal}} Senior</h6>
+            </div>
+            {% endif %}
+            <h3 class="order-total">Total: $ {{priceTotal}}</h3>
+        </div>
+        <div class="modification-buttons">
+            {% if customer.promotion_option == 1 %}
+            <div class="apply-promo-container">
+                <label for="apply-promo">Promo Code?</label>
+                <input type="text" form="continue-form" id="apply-promo" name="apply_promo"></input>
+            </div>
+            {% endif %}
+            <div class="update-tickets-button-container">
+                <a href="/select-seat/{{show.id}}">
+                    <button class="btn btn-primary">Update Order</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="continue-container">
+    <p>
+    <div class="ticket-total"></div> Tickets Selected</p>
+    <h4>Total: $ {{priceTotal}}</h4>
+    <div class="continue-button-container">
+        <form method="POST" action="/order-summary" id="continue-form">
+            <button class="btn btn-primary">Pay</button>
+        </form>
+    </div>
+</div>
+<script src="jquery-3.5.1.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="main.js"></script>
+{% endblock %}

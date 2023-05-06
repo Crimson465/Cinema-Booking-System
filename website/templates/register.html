@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Cinema E-Booking{% endblock %}
+{% block content %}
+  <!-- Register Container -->
+  <section class="vh-100" style="background-color: #eee;">
+      <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-lg-12 col-xl-11">
+            <div class="card text-black" style="border-radius: 25px;">
+              <div class="card-body p-md-5">
+                <div class="row justify-content-center">
+                  <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                          {% for category, msg in messages %}
+                              <div class="alert alert-{{ category }}">{{msg}}</div>
+                          {% endfor %}
+                      {% endif %}
+                    {% endwith %}
+                    <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
+    
+                    <form class="mx-1 mx-md-4" action="" method="post">
+
+                      <!-- Name -->
+                      <div class="d-flex flex-row align-items-center mb-4">
+                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                        <div class="form-outline flex-fill mb-0">
+                          <input type="text" id="register_name" class="form-control" name="name" required/>
+                          <label class="form-label" for="register_name">Your Name</label>
+                        </div>
+                      </div>
+
+                        <!-- Email -->
+                      <div class="d-flex flex-row align-items-center mb-4">
+                        <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                        <div class="form-outline flex-fill mb-0">
+                          <input type="email" id="register_email" class="form-control" name="email" required/>
+                          <label class="form-label" for="register_email">Your Email</label>
+                        </div>
+                      </div>
+    
+                      <!-- Password 1 -->
+                      <div class="d-flex flex-row align-items-center mb-4">
+                        <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                        <div class="form-outline flex-fill mb-0">
+                          <input type="password" id="register_password" class="form-control" name="password" required/>
+                          <label class="form-label" for="register_password">Password</label>
+                        </div>
+                      </div>
+
+                        <!-- Password 2 -->                           
+                      <div class="d-flex flex-row align-items-center mb-4">
+                        <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                        <div class="form-outline flex-fill mb-0">
+                          <input type="password" id="register_password2" class="form-control" name="password_confirm" required/>
+                          <label class="form-label" for="repeat_password">Repeat your password</label required>
+                        </div>
+                      </div>
+
+                      <!-- Promotions Option -->
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="promotion_verifier" id="flexCheckChecked" checked>
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Promotions Mailing List Signup
+                        </label>
+                      </div>
+    
+                        <!-- Register Button -->                  
+                      <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                        <button type="submit" class="btn btn-primary btn-lg" id = "register-button">Register</button>
+                      </div>
+
+                      <!-- Regster Button Click Event -->
+
+                    </form>
+    
+                  </div>
+                
+    
+
+    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+      <p style="text-align: center"> &copy; Cinema-E-Booking 2022 </p>
+    </footer>
+{% endblock %}

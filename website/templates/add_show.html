@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% block title %}Cinema E-Booking{% endblock %}
+{% block content %}
+  <!-- Register Container -->
+  <section class="vh-100" style="background-color: #eee;">
+      <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-lg-12 col-xl-11">
+            <div class="card text-black" style="border-radius: 25px;">
+              <div class="card-body p-md-5">
+                <div class="row justify-content-center">
+                  <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                    {% if show == None %}
+                      <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Add Show</p>
+      
+                      <form class="mx-1 mx-md-4" action="" method="post">
+
+                        <!-- Show Date -->
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="text" id="register_name" class="form-control" name="show_date" required/>
+                            <label class="form-label" for="register_name">Show Date</label>
+                          </div>
+                        </div>
+
+                        <!-- Show Time -->
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="text" id="register_name" class="form-control" name="show_time" required/>
+                            <label class="form-label" for="register_name">Show Time</label>
+                          </div>
+                        </div>
+
+                        <!-- Duration -->
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="text" id="register_name" class="form-control" name="duration" required/>
+                            <label class="form-label" for="register_name">Duration</label>
+                          </div>
+                        </div>
+
+                        <!-- Movie -->
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <select name="movies">
+                              {% for movie in movies %}
+                                <option value="{{movie.id}}">{{movie.title}}</option>
+                              {% endfor %}
+                            </select>
+                            <label class="form-label" for="register_name">Movie</label>
+                          </div>
+                        </div>
+
+                        <!-- Show Room -->
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <select name="show_rooms">
+                              {% for show_room in show_rooms %}
+                                <option value="{{show_room.id}}">{{show_room.room_number}}</option>
+                              {% endfor %}
+                            </select>
+                            <label class="form-label" for="register_name">Show Room</label>
+                          </div>
+                        </div>
+
+                          <!-- Submit Button -->                  
+                        <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                          <button type="submit" class="btn btn-primary btn-lg" id = "submit-button" title="Submit" name="submit">Submit</button>
+                        </div>
+
+                      </form>
+                    {% else %}
+                      <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Edit Show</p>
+        
+                      <form class="mx-1 mx-md-4" action="" method="post">
+
+                        <!-- Show Date -->
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="text" id="register_name" class="form-control" name="show_date" value="{{show.show_date}}" required/>
+                            <label class="form-label" for="register_name">Show Date</label>
+                          </div>
+                        </div>
+
+                        <!-- Show Time -->
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="text" id="register_name" class="form-control" name="show_time" value="{{show.show_time}}" required/>
+                            <label class="form-label" for="register_name">Show Time</label>
+                          </div>
+                        </div>
+
+                        <!-- Duration -->
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="text" id="register_name" class="form-control" name="duration" value="{{show.duration}}" required/>
+                            <label class="form-label" for="register_name">Duration</label>
+                          </div>
+                        </div>
+
+                        <!-- Movie -->
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <select name="movies">
+                              {% for movie in movies %}
+                                {% if movie.title == show.movie.title %}
+                                  <option value="{{movie.id}}" selected>{{movie.title}}</option>
+                                {% else %}
+                                  <option value="{{movie.id}}">{{movie.title}}</option>
+                                {% endif %}
+                              {% endfor %}
+                            </select>
+                            <label class="form-label" for="register_name">Movie</label>
+                          </div>
+                        </div>
+
+                        <!-- Show Room -->
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <select name="show_rooms">
+                              {% for show_room in show_rooms %}
+                                {% if show_room.room_number == show.show_room.room_number %}
+                                  <option value="{{show_room.id}}" selected>{{show_room.room_number}}</option>
+                                {% else %}
+                                  <option value="{{show_room.id}}">{{show_room.room_number}}</option>
+                                {% endif %}
+                              {% endfor %}
+                            </select>
+                            <label class="form-label" for="register_name">Show Room</label>
+                          </div>
+                        </div>
+      
+                          <!-- Submit Button -->                  
+                        <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                          <button type="submit" class="btn btn-primary btn-lg" id = "submit-button" title="Submit" name="submit" value="{{show.id}}">Submit</button>
+                        </div>
+
+                      </form>
+                    {% endif %}
+                  </div>
+                
+    
+
+    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+      <p style="text-align: center"> &copy; Cinema-E-Booking 2022 </p>
+    </footer>
+{% endblock %}

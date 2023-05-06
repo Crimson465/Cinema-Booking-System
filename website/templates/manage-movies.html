@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Cinema E-Booking{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-7 mx-auto">
+            <div class="card border-0 shadow">
+                <div class="card-body p-5">
+
+                    <!-- Responsive table -->
+                    <div class="table-responsive">
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Cast</th>
+                                    <th scope="col">Director</th>
+                                    <th scope="col">Producer</th>
+                                    <th scope="col">Synopsis</th>
+                                    <th scope="col">Rating</th>
+                                    <th scope="col">Picture</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for movie in movies %}
+                                    <tr>
+                                        <th scope="row">{{movie.id}}</th>
+                                        <td>{{movie.title}}</td>
+                                        <td>{{movie.category}}</td>
+                                        <td>{{movie.cast}}</td>
+                                        <td>{{movie.director}}</td>
+                                        <td>{{movie.producer}}</td>
+                                        <td>{{movie.synopsis}}</td>
+                                        <td>{{movie.rating}}</td>
+                                        <td>{{movie.picture}}</td>
+                                        <td>
+                                            <!-- Call to action buttons -->
+                                            <ul class="list-inline m-0">
+                                                <li class="list-inline-item">
+                                                    <form action="/edit-movie/{{movie.id}}" method="get">
+                                                        <button class="btn btn-success btn-sm rounded-0" type="submit" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i>Edit</button>
+                                                    </form>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <form action="/delete-movie" method="post">
+                                                        <button class="btn btn-danger btn-sm rounded-0" type="submit" data-toggle="tooltip" data-placement="top" title="Delete" name="delete" value="{{movie.id}}"><i class="fa fa-trash"></i>Delete</button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <form action="/add-movie" method="get">
+                            <button class="btn btn-primary" type="submit" data-toggle="tooltip" data-placement="top" title="Add" name="add"><i class="fa fa-trash"></i>Add Movie</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

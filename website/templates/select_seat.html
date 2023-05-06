@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+{% block title %}Cinema E-Booking{% endblock %}
+{% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css?family=Lato&display-swap');
+
+  body {
+    position: relative;
+    margin: 0px;
+    height: 100%;
+    width: 100%;
+    /* background: #e9e9e9; */
+    background-color: black;
+    font-family: 'Arimo', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #010b26;
+  }
+
+  * {
+    -webkit-transition: 300ms;
+    transition: 300ms;
+    box-sizing: border-box;
+  }
+
+  .movie-info {
+    background-color: black;
+    color: whitesmoke;
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .seat-select-container {
+    font-family: 'Lato', 'sans-serif';
+    background-color: #242333;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin-top: 0;
+  }
+
+  .seat {
+    background-color: #444451;
+    height: 12px;
+    width: 15px;
+    margin: 3px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  .movie-container {
+    margin: 20px 0;
+  }
+
+  .movie-container select {
+    background-color: #fff;
+    border: 0;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-left: 10px;
+    padding: 5px 15px 5px 15px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .seat.selected {
+    background-color: cyan;
+  }
+
+  .seat.occupied {
+    background-color: white;
+  }
+
+  .seat:not(.occupied):hover {
+    cursor: pointer;
+    transform: scale(1, 2);
+    background-color: red;
+  }
+
+  .showcase .seat:not(.occupied):hover {
+    cursor: default;
+    transform: scale(1);
+  }
+
+  .showcase {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #777;
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .showcase li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+  }
+
+  .showcase li small {
+    margin-left: 10px;
+  }
+
+  .screen {
+    background-color: white;
+    height: 70px;
+    width: 25%;
+    margin: 15px 0;
+    transform: rotateX(-45deg);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.75);
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    perspective: 1000px;
+    margin-bottom: 30px;
+  }
+
+  p.text {
+    margin: 5px 0;
+  }
+
+  p.text span {
+    color: cyan;
+  }
+
+  .row {
+    display: flex;
+  }
+
+  .continue-container {
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    bottom: 0;
+    background-color: black;
+    color: azure;
+    width: 100%;
+    height: auto;
+    padding: 1vw;
+    margin-bottom: 4vh;
+  }
+
+  .continue-container * {
+    padding: 0 1vw;
+  }
+
+  .ticket-button {
+    width: 5vw;
+    height: auto;
+  }
+
+  @media screen and (max-width: 500px) {}
+</style>
+<div class="movie-info">
+  <h1 class="movie-title">{{show.movie.title}}</h1>
+  <p class="movie-time">{{show.show_date}} - {{show.show_time}} PM | {{show.movie.category}}</p>
+</div>
+<div class="seat-select-container">
+  <h1>Select Seats</h1>
+  <ul class="showcase">
+    <li>
+      <div class="seat"></div>
+      <small>N/A</small>
+    </li>
+    <li>
+      <div class="seat selected"></div>
+      <small>Selected</small>
+    </li>
+    <li>
+      <div class="seat occupied"></div>
+      <small>Ocuppied</small>
+    </li>
+  </ul>
+
+  <div class="container">
+    <div class="screen"></div>
+    {% for i in range(0, 10) %}
+    <div class="row">
+      {% for seat in show.show_room.seats %}
+      {% if seat.row_number == i %}
+      {% if seat.status == 2 %}
+      <div class="seat occupied" id={{seat.id}} onclick="changeStatus('{{seat.id}}')"></div>
+      {% else %}
+      <div class="seat" id={{seat.id}} onclick="changeStatus('{{seat.id}}')"></div>
+      {% endif %}
+      {% endif %}
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="continue-container">
+  <p>
+  <div id="numOfSeats">0</div> Seats Selected
+  </p>
+  <div class="continue-button-container">
+    <form method="POST" action="/select-seat/{{show.id}}" id="buy-tickets-form">
+      <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var numOfSeats = 0;
+
+  document.getElementById("numOfSeats").innerText = numOfSeats;
+
+  function changeStatus(id) {
+    console.log('changeStatus being called...');
+    console.log(`id: ${id}`);
+
+    if (!document.getElementById(`${id}`).classList.contains('occupied')) {
+      if (!document.getElementById(`${id}`).classList.contains('selected')) {
+        document.getElementById(`${id}`).classList.add('selected');
+
+        const form = document.getElementById('buy-tickets-form');
+        const input_element = document.createElement('input');
+        input_element.setAttribute("type", "hidden")
+        input_element.setAttribute("name", "seats")
+        input_element.setAttribute("value", id)
+        form.appendChild(input_element);
+
+        numOfSeats++;
+        document.getElementById("numOfSeats").innerText = numOfSeats;
+      } else {
+        console.log('Unselecting seat...')
+        document.getElementById(`${id}`).classList.remove('selected');
+
+        const seat_input = document.querySelectorAll(`input[value="${id}"]`)[0];
+        seat_input.remove();
+        numOfSeats--;
+        document.getElementById("numOfSeats").innerText = numOfSeats;
+      }
+    }
+
+    console.log(`selectedSeat: ${id}`);
+  }
+</script>
+<script src="jquery-3.5.1.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="main.js"></script>
+
+{% endblock %}
