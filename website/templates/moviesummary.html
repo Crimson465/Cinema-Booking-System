@@ -179,7 +179,14 @@
     display: table-cell;
     text-transform: uppercase;
     text-align: center;
-    margin: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 1em;
+    float: right;
+  }
+
+  .show-date{
+    float: left;
   }
 
   .info-section {
@@ -206,6 +213,24 @@
   .info-section span {
     font-weight: 700;
     font-size: 11px;
+  }
+
+  label#description{
+    text-align: left;
+  }
+
+  span#description{
+    display: block;
+    text-align: left;
+  }
+
+  label#cast{
+    text-align: left;
+  }
+
+  span#cast{
+    display: block;
+    text-align: left;
   }
 
   @media screen and (max-width: 500px) {
@@ -270,7 +295,7 @@
         <div class="header-icon-container">
           <a href="#">
             <!--<i class="material-icons header-icon"></i>!-->
-            <iframe class="material-icons header-icon" src="{{movie.picture + " &autoplay=1"}}">
+            <iframe class="material-icons header-icon" src="{{movie.picture}}">
             </iframe>
           </a>
         </div>
@@ -280,17 +305,17 @@
           <a href="#">
             <h3 class="movie-title">{{movie.title}}</h3>
           </a>
-          <div class="imax-logo"></div>
+          <!-- <div class="imax-logo"></div> -->
         </div>
         <div class="movie-info">
           <div class="info-section">
-            <label>Date & Time</label>
-            <span>{{movie.shows[0].show_date}} - {{movie.shows[0].show_time}}</span>
+            <label>Duration</label>
+            <span>{{movie.shows[0].duration}}</span>
           </div>
-          <div class="info-section">
+          <!-- <div class="info-section">
             <label>Screen</label>
             <span>03</span>
-          </div>
+          </div> -->
 
 
         </div>
@@ -310,8 +335,8 @@
         </div>
         <div class="movie-info">
           <div class="info-section">
-            <label>Description</label>
-            <span>{{movie.synopsis}}</span>
+            <label id="description">Description</label>
+            <span id="description">{{movie.synopsis}}</span>
           </div>
         </div>
         <div class="movie-info">
@@ -326,8 +351,8 @@
         </div>
         <div class="movie-info">
           <div class="info-section">
-            <label>Cast</label>
-            <span>{{movie.cast}}</span>
+            <label id="cast">Cast</label>
+            <span id="cast">{{movie.cast}}</span>
           </div>
         </div>
       </div>
@@ -338,7 +363,7 @@
       {%for show in movie.shows%}
       <div class="movie-button">
         <div class="movie-content">
-          <div class="info-section">
+          <div class="info-section show-date">
             <label>Date & Time</label>
             <span>{{show.show_date}} - {{show.show_time}}</span>
           </div>
@@ -356,9 +381,9 @@
   </div>
   <!--container-->
 
-  <footer id="footer">
+  <!-- <footer id="footer">
     <p style="text-align: center"> &copy; Cinema-E-Booking 2022 </p>
-  </footer>
+  </footer> -->
   <script src="jquery-3.5.1.min.js"></script>
   <script src="bootstrap/js/bootstrap.min.js"></script>
   <script src="main.js"></script>
