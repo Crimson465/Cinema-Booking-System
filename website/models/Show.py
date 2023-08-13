@@ -117,7 +117,9 @@ class Seat(db.Model):
     show_room_id = db.Column("show_room_id", db.Integer, db.ForeignKey('show_rooms.id'))
     show_room = db.relationship("ShowRoom", back_populates="seats")
 
-    #ticket = db.relationship("Seat", back_populates="tickets")
+    # show_id = db.Column("show_id", db.Integer, db.ForeignKey('shows.id'))
+    # show = db.relationship("Show", back_populates="seats")
+
 
     def __init__(self, number):
         self.status = 'open'
